@@ -567,6 +567,8 @@ class LpyModelView (SceneView):
         self.__animated = False
         self.emit(SIGNAL('animationStopped()'))
 
+import sys
+
 
 class LpyModelWithCacheView (LpyModelView):
     def __init__(self,parent = None,name = ''):
@@ -574,10 +576,11 @@ class LpyModelWithCacheView (LpyModelView):
         self.variations = {}
         self.cachefile = None
         self.cacherep = ''
+        self.__use_cache = not '--no-cache' in sys.argv        
        
     def initView(self):
         LpyModelView.initView(self)
-        if self.lsystem:
+        if self.lsystem and self.__use_cache:
             res = self.computeCache(self.cachefile,self.cacherep)
             return res
         
@@ -589,8 +592,8 @@ class LpyModelWithCacheView (LpyModelView):
         from PyQt4.QtCore import QDir
         print 'compute cache'
         self.__cachedcariables = list(self.variations.iterkeys())
-        if not fname:
-            print 'no cache'
+        if not fname or not self.__use_cache:
+            print 'no cache', not self.__use_cache
             self.__computeCache()
         else:
             from os.path import exists,join
