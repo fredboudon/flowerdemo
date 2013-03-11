@@ -533,7 +533,7 @@ class LpyModelView (SceneView):
         return None
 
     def setLsystem(self,fname):
-        self.lsystem_file = get_shared_model(fname)
+        self.lsystem_file = str(get_shared_model(fname))
         self.lsystem = Lsystem(self.lsystem_file)
         
     def initView(self):

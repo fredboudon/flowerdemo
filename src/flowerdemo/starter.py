@@ -36,7 +36,7 @@ class MenuView(SceneView):
 
     def create3DMenu(self,nb = 4):
         self.base = 'arabido'+str(nb)
-        scene = Scene(get_shared_model(self.base+'.bgeom'))
+        scene = Scene(str(get_shared_model(self.base+'.bgeom')))
         
         # petals
         info = eval(file(get_shared_model(self.base+'-petalid.txt')).readline())
@@ -62,7 +62,7 @@ class MenuView(SceneView):
         for pid,img in panels:
             sh = self.petalscene[i]
             print i,sh.id,pid, img, self.petalangle[i]
-            sh.appearance = Texture2D('texture_'+str(i),ImageTexture(get_shared_image(img)), Texture2DTransformation('',scale=(-1,5/7.),rotationAngle = pi/2))
+            sh.appearance = Texture2D('texture_'+str(i),ImageTexture(str(get_shared_image(img))), Texture2DTransformation('',scale=(-1,5/7.),rotationAngle = pi/2))
             self.petal2panel[sh.id] = pid
             i += 1
     
