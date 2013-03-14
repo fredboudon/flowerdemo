@@ -12,10 +12,23 @@ from bouquet import BouquetView
 from geneshape import GeneShapeView
 from about import AboutView
 
+def help():
+    print 'FlowerDemo'
+    print ' --help -h : This help'
+    print ' --no-fullscreen : Do not use fullscreen mode'
+    print ' --no-cache : Do not use cache to speedup start of this application'
+    print ' --re-cache : Recompute cache'
+    
+
 def main(args = None):
     if args is None:
         import sys
         args = sys.argv
+        
+        
+    if '-h' in args or '--help' in args: 
+        help()
+        return
     
     
     app = QApplication(args)
@@ -41,9 +54,11 @@ def main(args = None):
     window.appendAboutView(AboutView(window))
     #window.setCurrentViewId(1)
     print 'show'
-    #mainwindow.resize(800,600)
-    #mainwindow.show()
-    mainwindow.showFullScreen()   
+    if '--no-fullscreen' in args:
+        mainwindow.resize(800,600)
+        mainwindow.show()
+    else:
+        mainwindow.showFullScreen()   
     app.exec_()
     
     

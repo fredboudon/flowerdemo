@@ -580,7 +580,7 @@ class LpyModelWithCacheView (LpyModelView):
        
     def initView(self):
         LpyModelView.initView(self)
-        if self.lsystem and self.__use_cache:
+        if self.lsystem :
             res = self.computeCache(self.cachefile,self.cacherep)
             return res
         
@@ -593,13 +593,22 @@ class LpyModelWithCacheView (LpyModelView):
         print 'compute cache'
         self.__cachedcariables = list(self.variations.iterkeys())
         if not fname or not self.__use_cache:
-            print 'no cache', not self.__use_cache
-            self.__computeCache()
+            print 'no cache :', not self.__use_cache
+            for i,maxp in self.__computeCache():
+                yield i,maxp
         else:
             from os.path import exists,join
-            from os import mkdir
+            from os import mkdir, rmdir
+            from shutil import rmtree
             tmpdir = str(QDir.tempPath())
             cachedir = join(tmpdir,'flowerdemo-cache')
+            if '--re-cache' in sys.argv and exists(cachedir):
+                print 'Remove cache dir :',repr(cachedir)
+                try:
+                    rmtree(cachedir)
+                except Exception,e: 
+                    print e
+                    pass
             lcachedir = join(cachedir,rep)
             gfname = join(lcachedir,fname)
             outdated = False
@@ -641,7 +650,7 @@ class LpyModelWithCacheView (LpyModelView):
                 stream = file(timestampfile,'w')
                 stream.write(str(long(os.stat(self.lsystem_file).st_mtime))+'\n')
                 yield 1,1
-                print 'save cache',fname
+                print 'save cache',repr(fname)
         
     def __computeCache(self):
         from copy import deepcopy 
