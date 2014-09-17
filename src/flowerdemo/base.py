@@ -260,14 +260,16 @@ class GLTextBox  (Action,GLFrame):
         self.__initialized__ = False
     
     def setText(self,text):
+        if len(text) == 0 : return
         lines = text.split('\n')
         qf = QFontMetrics(self.font)
+        fmw = max(qf.maxWidth(),10)
         nlines = []
         w = self.width-2*self.margin
         for line in lines:
             if qf.width(line) > w:
                 while qf.width(line) > w:
-                    for i in xrange(w/qf.maxWidth(),len(line)):
+                    for i in xrange(w/fmw,len(line)):
                         if qf.width(line,i) > w:
                             if line[i].isalnum() and line[i-1].isalnum():
                                 nlines.append(line[0:i-1]+('-' if line[i-2].isalnum() else ''))
