@@ -48,7 +48,8 @@ class GeneShapeView(LpyModelView):
         self.createHelpWidgetFromFile('formegene.txt')
      
     def initLayout(self):
-        self.vlayout = QtGui.QVBoxLayout(self.widget)
+
+        self.vlayout = QtGui.QVBoxLayout(self.widget.bottomwidget)
         self.vlayout.addStretch(0)
         self.hlayout1 = QtGui.QHBoxLayout()
         self.vlayout.addLayout(self.hlayout1)
@@ -76,7 +77,7 @@ class GeneShapeView(LpyModelView):
                 combo.setIconSize(QtCore.QSize(self.iconSize[0],self.iconSize[1]))
                 callback = make_callback(name, values)
                 QtCore.QObject.connect(combo,QtCore.SIGNAL("activated(int)"), callback)
-                combo.hide()
+                #combo.hide()
                 
                 if i == self.genebyline : 
                     layout.addStretch(0)
@@ -87,7 +88,8 @@ class GeneShapeView(LpyModelView):
                 i += 1
         layout.addStretch(0)
 
-        
+        self.widget.bottomwidget.setLayout(self.vlayout)
+
     def initView(self):
         LpyModelView.initView(self)
         self.initLayout()
@@ -95,9 +97,10 @@ class GeneShapeView(LpyModelView):
     def openView(self):
         LpyModelView.openView(self)
         
-        for combo in self.combos:
-            combo.show()
-        self.widget.setLayout(self.vlayout)
+        #for combo in self.combos:
+        #    combo.show()
+        self.widget.bottomwidget.show() # setLayout(self.vlayout)
+        #self.widget.setLayout(self.vlayout)
         
         # init buttons
         # self.resizeWidgetEvent(self.widget.width(),self.widget.height())
@@ -110,9 +113,9 @@ class GeneShapeView(LpyModelView):
         
     def closeView(self):
         LpyModelView.closeView(self)
-        for combo in self.combos:
-            combo.hide()
-        
+        #for combo in self.combos:
+        #    combo.hide()
+        self.widget.bottomwidget.hide()
 
     def setView(self):
         camera = self.widget.camera()

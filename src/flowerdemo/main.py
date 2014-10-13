@@ -4,7 +4,7 @@ def oldmain():
     main()
 
 from PyQt4.Qt import QApplication,QMainWindow
-from base import DemoWidget, SceneView
+from base import DemoApp, DemoWidget, SceneView
 from starter import MenuView
 from naked import NakedView
 from abcmodel import ABCView
@@ -34,24 +34,24 @@ def main(args = None):
     app = QApplication(args)
     
     mainwindow = QMainWindow()
-    window = DemoWidget()
+    window = DemoApp()
     mainwindow.setCentralWidget(window)
     panels = []
-    pid = window.appendView(NakedView(window))
+    pid = window.appendView(NakedView(window.frame))
     panels += [(pid,'deshabillezmoi.png')]
-    pid = window.appendView(GeneShapeView(window))
+    pid = window.appendView(GeneShapeView(window.frame))
     panels += [(pid,'formegene.png')]
-    pid = window.appendView(ABCView(window))
+    pid = window.appendView(ABCView(window.frame))
     panels += [(pid,'abc.png')]
     if '-3' not in args:
-        pid = window.appendView(BouquetView(window))
+        pid = window.appendView(BouquetView(window.frame))
         panels += [(pid,'bouquet.png')]
     #pid = window.appendView(SceneView(window))
     #panels += [(pid,'fleuralautre.png')]
-    menu = MenuView(window)
+    menu = MenuView(window.frame)
     menuid = window.appendInitialView(menu)
     menu.setPanels(panels)
-    window.appendAboutView(AboutView(window))
+    window.appendAboutView(AboutView(window.frame))
     #window.setCurrentViewId(1)
     print 'show'
     if '--no-fullscreen' in args:

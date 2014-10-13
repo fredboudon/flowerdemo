@@ -170,7 +170,7 @@ Annulus(N,Radius,radius):
   prop = radius/Radius
   nproduce _(.05)f(radius)+(90-alp/2.) 
   for i in xrange(N):
-    nproduce +(alp)[{F(Radius*(alp*deg2rad))+(90.+alp/2.)F(Radius*(1.-prop))+(90-alp/2.)F(Radius*(alp*deg2rad)*prop+.001)+(90.-alp/2.)F(Radius*(1.-prop))}]f(Radius*(alp*deg2rad))
+    nproduce +(alp)[{f(Radius*(alp*deg2rad)).+(90.+alp/2.)f(Radius*(1.-prop)).+(90-alp/2.)f(Radius*(alp*deg2rad)*prop+.001).+(90.-alp/2.)f(Radius*(1.-prop)).}]f(Radius*(alp*deg2rad))
 
 
 
@@ -349,110 +349,56 @@ __lpy_code_version__ = 1.1
 
 def __initialiseContext__(context):
 	import openalea.plantgl.all as pgl
-	Color_1 = pgl.Material("Color_1" , 		ambient = (28,19,6) , 
-		diffuse = 5.57143 , 
-		specular = (50,50,50) , 
-		emission = (9,9,9) , 
-)
+	Color_1 = pgl.Material("Color_1" , ambient = (28,19,6) , diffuse = 5.57143 , specular = (50,50,50) , emission = (9,9,9) , )
 	Color_1.name = "Color_1"
 	context.turtle.setMaterial(1,Color_1)
-	Color_2 = pgl.Material("Color_2" , 		ambient = (18,37,5) , 
-		diffuse = 2.35135 , 
-)
+	Color_2 = pgl.Material("Color_2" , ambient = (18,37,5) , diffuse = 2.35135 , )
 	Color_2.name = "Color_2"
 	context.turtle.setMaterial(2,Color_2)
-	Color_3 = pgl.Material("Color_3" , 		ambient = (97,97,97) , 
-		diffuse = 1.94845 , 
-		specular = (42,42,42) , 
-)
+	Color_3 = pgl.Material("Color_3" , ambient = (97,97,97) , diffuse = 1.94845 , specular = (42,42,42) , )
 	Color_3.name = "Color_3"
 	context.turtle.setMaterial(3,Color_3)
-	Color_4 = pgl.Material("Color_4" , 		ambient = (84,56,0) , 
-		diffuse = 2.44048 , 
-		specular = (32,32,32) , 
-		emission = (26,26,26) , 
-)
+	Color_4 = pgl.Material("Color_4" , ambient = (84,56,0) , diffuse = 2.44048 , specular = (32,32,32) , emission = (26,26,26) , )
 	Color_4.name = "Color_4"
 	context.turtle.setMaterial(4,Color_4)
-	Color_5 = pgl.Material("Color_5" , 		ambient = (6,61,12) , 
-		diffuse = 0.885246 , 
-		specular = (124,124,124) , 
-)
+	Color_5 = pgl.Material("Color_5" , ambient = (6,61,12) , diffuse = 0.885246 , specular = (124,124,124) , )
 	Color_5.name = "Color_5"
 	context.turtle.setMaterial(5,Color_5)
-	Color_6 = pgl.Material("Color_6" , 		ambient = (41,0,0) , 
-		diffuse = 2.36585 , 
-		specular = (92,8,8) , 
-		emission = (45,0,0) , 
-)
+	Color_6 = pgl.Material("Color_6" , ambient = (41,0,0) , diffuse = 2.36585 , specular = (92,8,8) , emission = (45,0,0) , )
 	Color_6.name = "Color_6"
 	context.turtle.setMaterial(6,Color_6)
-	Color_8 = pgl.Material("Color_8" , 		ambient = (254,0,0) , 
-		diffuse = 0.629921 , 
-		specular = (255,0,0) , 
-		emission = (255,0,0) , 
-)
+	Color_8 = pgl.Material("Color_8" , ambient = (254,0,0) , diffuse = 0.629921 , specular = (255,0,0) , emission = (255,0,0) , )
 	Color_8.name = "Color_8"
 	context.turtle.setMaterial(8,Color_8)
-	Color_9 = pgl.Material("Color_9" , 		ambient = (255,255,0) , 
-		diffuse = 0.45098 , 
-		specular = (104,104,104) , 
-		emission = (255,255,0) , 
-)
+	Color_9 = pgl.Material("Color_9" , ambient = (255,255,0) , diffuse = 0.45098 , specular = (104,104,104) , emission = (255,255,0) , )
 	Color_9.name = "Color_9"
 	context.turtle.setMaterial(9,Color_9)
-	Color_10 = pgl.Material("Color_10" , 		ambient = (0,0,255) , 
-		diffuse = 0.627451 , 
-)
+	Color_10 = pgl.Material("Color_10" , ambient = (0,0,255) , diffuse = 0.627451 , )
 	Color_10.name = "Color_10"
 	context.turtle.setMaterial(10,Color_10)
-	Color_11 = pgl.Material("Color_11" , 		ambient = (255,185,7) , 
-		diffuse = 0 , 
-		specular = (0,0,0) , 
-		emission = (255,3,3) , 
-)
+	Color_11 = pgl.Material("Color_11" , ambient = (255,185,7) , diffuse = 0 , specular = (0,0,0) , emission = (255,3,3) , )
 	Color_11.name = "Color_11"
 	context.turtle.setMaterial(11,Color_11)
-	Color_12 = pgl.Material("Color_12" , 		ambient = (200,0,255) , 
-		diffuse = 0 , 
-		specular = (0,0,0) , 
-		transparency = 0.01 , 
-)
+	Color_12 = pgl.Material("Color_12" , ambient = (200,0,255) , diffuse = 0 , specular = (0,0,0) , transparency = 0.01 , )
 	Color_12.name = "Color_12"
 	context.turtle.setMaterial(12,Color_12)
-	Color_13 = pgl.Material("Color_13" , 		ambient = (83,218,137) , 
-		diffuse = 0 , 
-		specular = (0,0,0) , 
-)
+	Color_13 = pgl.Material("Color_13" , ambient = (83,218,137) , diffuse = 0 , specular = (0,0,0) , )
 	Color_13.name = "Color_13"
 	context.turtle.setMaterial(13,Color_13)
-	Color_14 = pgl.Material("Color_14" , 		ambient = (0,50,240) , 
-		diffuse = 1.0625 , 
-		specular = (0,0,0) , 
-		emission = (0,50,255) , 
-		transparency = 0.56 , 
-)
+	Color_14 = pgl.Material("Color_14" , ambient = (0,50,240) , diffuse = 1.0625 , specular = (0,0,0) , emission = (0,50,255) , transparency = 0.56 , )
 	Color_14.name = "Color_14"
 	context.turtle.setMaterial(14,Color_14)
-	Color_15 = pgl.Material("Color_15" , 		ambient = (0,0,255) , 
-		diffuse = 0 , 
-		specular = (0,0,0) , 
-		emission = (0,0,255) , 
-		transparency = 0.57 , 
-)
+	Color_15 = pgl.Material("Color_15" , ambient = (0,0,255) , diffuse = 0 , specular = (0,0,0) , emission = (0,0,255) , transparency = 0.57 , )
 	Color_15.name = "Color_15"
 	context.turtle.setMaterial(15,Color_15)
-	Color_16 = pgl.Material("Color_16" , 		ambient = (0,0,0) , 
-		diffuse = 40 , 
-		specular = (0,0,0) , 
-)
+	Color_16 = pgl.Material("Color_16" , ambient = (0,0,0) , diffuse = 40 , specular = (0,0,0) , )
 	Color_16.name = "Color_16"
 	context.turtle.setMaterial(16,Color_16)
 	context.options.setSelection('Warning with Turtle inconsistency',0)
-	scalars = [('nb_sepal', 4, 1, 20), ('nb_petal', 4, 1, 20), ('nb_stamen', 5, 1, 30), ('sepal_length', 5, 1, 30), ('petal_length', 7, 1, 30), ('stamen_length', 4, 1, 30), ('carpel_length', 4, 1, 30), ('leaf_length', 6, 1, 100), ('sepalflag', True, False, True), ('petalflag', True, False, True), ('stamenflag', True, False, True), ('carpelflag', True, False, True), ('leafflag', True, False, True), ('noise', True, False, True), ('nb_carpel', 1, 0, 100), ('GA', True, False, True), ('GB', True, False, True), ('GC', True, False, True), ('verticille_1', True, False, True), ('verticille_2', True, False, True), ('verticille_3', True, False, True), ('verticille_4', True, False, True), ('stemflag', False, False, True), ('REPONSE', True, False, True), ('show_ABC_colors', False, False, True)]
+	scalars = [('nb_sepal', 'Integer', 4, 1, 20), ('nb_petal', 'Integer', 4, 1, 20), ('nb_stamen', 'Integer', 5, 1, 30), ('sepal_length', 'Integer', 5, 1, 30), ('petal_length', 'Integer', 7, 1, 30), ('stamen_length', 'Integer', 4, 1, 30), ('carpel_length', 'Integer', 4, 1, 30), ('leaf_length', 'Integer', 6, 1, 100), ('sepalflag', 'Bool', True), ('petalflag', 'Bool', True), ('stamenflag', 'Bool', True), ('carpelflag', 'Bool', True), ('leafflag', 'Bool', True), ('noise', 'Bool', True), ('nb_carpel', 'Integer', 1, 0, 100), ('GA', 'Bool', True), ('GB', 'Bool', True), ('GC', 'Bool', True), ('verticille_1', 'Bool', True), ('verticille_2', 'Bool', True), ('verticille_3', 'Bool', True), ('verticille_4', 'Bool', True), ('stemflag', 'Bool', False), ('REPONSE', 'Bool', True), ('show_ABC_colors', 'Bool', False)]
 	context["__scalars__"] = scalars
-	for n,v,mnv,mxv in scalars:
-		context[n] = v
+	for s in scalars:
+		if not s[1] == "Category" : context[s[0]] = s[2]
 	import openalea.plantgl.all as pgl
 	sepal_width = pgl.NurbsCurve2D(	
 	    ctrlPointList = pgl.Point3Array([(0, 0.0342648, 1),(0.0549666, 0.231318, 1),(0.510107, 0.163966, 1),(0.917895, 0.180944, 1),(1, 0.0268255, 1)]) , 

@@ -1,4 +1,4 @@
-from PyQt4.Qt import QObject, QImage, Qt, SIGNAL, QApplication, QFontMetrics, QTimer, QColor, QFont, QString
+from PyQt4.Qt import QObject, QImage, Qt, SIGNAL, QApplication, QFontMetrics, QTimer, QColor, QFont, QString, QWidget, QVBoxLayout, QPalette
 from PyQt4.QtOpenGL import QGLWidget
 
 from openalea.lpy import *
@@ -683,11 +683,44 @@ class LpyModelWithCacheView (LpyModelView):
         self.setScene(self.cache[conf])
         self.widget.updateGL()   
     
+
+class DemoApp(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent)
+
+        self.bottomwidget = QWidget(self)
+        self.bottomwidget.setMaximumHeight(200)
+        self.bottomwidget.setMinimumHeight(0)
+
+        self.glwidget = DemoWidget(self)
+
+        self.mlayout = QVBoxLayout()
+        self.setLayout(self.mlayout)
+        self.mlayout.addWidget(self.glwidget)
+        self.mlayout.addWidget(self.bottomwidget)
+        self.mlayout.setSpacing(0)
+        self.mlayout.setContentsMargins(0, 0, 0, 0)
+
+        self.bottomwidget.hide()
+
+
+        self.frame = self.glwidget
+
+    def appendView(self,view):
+        return self.glwidget.appendView(view)
+        
+    def appendAboutView(self,view):
+        return self.glwidget.appendAboutView(view)
+
+    def appendInitialView(self,view):
+        return self.glwidget.appendInitialView(view)
+        
         
 class DemoWidget(QGLViewer):
     
     def __init__(self, parent=None):
         QGLViewer.__init__(self, parent)
+        self.bottomwidget = parent.bottomwidget
         self.__views = []
         self.__currentview = None
         self.__initialview = None
@@ -708,9 +741,16 @@ class DemoWidget(QGLViewer):
         self.__viewIter__ = iter(self.__views)
         self.__valueViewIter__ = None
         self.__first_initialization__ = True
+    
     def init(self):
         self.backButton.init()
         self.setForegroundColor(QColor(0,0,0))
+
+        palette = QPalette(self.bottomwidget.palette())
+        palette.setColor(QPalette.Background, self.backgroundColor()) #Qt.black)
+        self.bottomwidget.setAutoFillBackground(True)
+        self.bottomwidget.setPalette(palette)
+
         # if not self.__initiated__:
             # self.__initiated__ = True
             # for v in self.__views:
