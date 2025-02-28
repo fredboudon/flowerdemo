@@ -1,22 +1,22 @@
 C'est le bouquet !...
 
 
-Cette démo illustre la façon dont des gènes contrôlent le déclenchement de la floraison.
+Cette dÃ©mo illustre la faÃ§on dont des gÃ¨nes contrÃ´lent le dÃ©clenchement de la floraison.
 
-Vous avez vu dans la démo ABC que les gènes peuvent avoir plusieurs fonctions, et qu'ils sont exprimés à des endroits spécifiques de la plante. Vous avez vu également que des gènes peuvent influencer l'expression d'autres gènes. Nous retrouvons ici ces aspects, qui se manifestent à l'échelle de la plante entière.
+Vous avez vu dans la dÃ©mo ABC que les gÃ¨nes peuvent avoir plusieurs fonctions, et qu'ils sont exprimÃ©s Ã  des endroits spÃ©cifiques de la plante. Vous avez vu Ã©galement que des gÃ¨nes peuvent influencer l'expression d'autres gÃ¨nes. Nous retrouvons ici ces aspects, qui se manifestent Ã  l'Ã©chelle de la plante entiÃ¨re.
 
-Cette démo est une simplification dans laquelle nous prenons en compte seulement trois gènes, appelés ici :
-    - F pour un gène déclencheur du processus de développement de la fleur
-    - A qui est un gène de la classe A (voir démo ABC), plus un autre qui lui ressemble.
-    - T qui est un gène induisant l'identité de tige.
+Cette dÃ©mo est une simplification dans laquelle nous prenons en compte seulement trois gÃ¨nes, appelÃ©s ici :
+    - F pour un gÃ¨ne dÃ©clencheur du processus de dÃ©veloppement de la fleur
+    - A qui est un gÃ¨ne de la classe A (voir dÃ©mo ABC), plus un autre qui lui ressemble.
+    - T qui est un gÃ¨ne induisant l'identitÃ© de tige.
 
-Tout comme les gènes A et C, les gènes F et T sont antagonistes et se "chassent" l'un l'autre.
+Tout comme les gÃ¨nes A et C, les gÃ¨nes F et T sont antagonistes et se "chassent" l'un l'autre.
 
-De plus nous avons ici le mécanisme suivant : au fur et à mesure de la croissance de la plante, le niveau local des gènes F et T augment progressivement. 
-Initialement (en bas de la plante), c'est T qui "gagne", mais F finit normalement par l'emporter. Pour réussir cela, et engendrer l'apparition de fleurs, F doit réussir à activer A. Les gènes A et F ont besoin l'un de l'autre pour rester actifs.
+De plus nous avons ici le mÃ©canisme suivant : au fur et Ã  mesure de la croissance de la plante, le niveau local des gÃ¨nes F et T augment progressivement. 
+Initialement (en bas de la plante), c'est T qui "gagne", mais F finit normalement par l'emporter. Pour rÃ©ussir cela, et engendrer l'apparition de fleurs, F doit rÃ©ussir Ã  activer A. Les gÃ¨nes A et F ont besoin l'un de l'autre pour rester actifs.
 Ainsi, on observe (en vrai !) les effets suivants :
-    - si le gène F est muté (rendu inactif), ou T rendu inextinguible, pas de fleur !
-    - à l'inverse, si T est muté ou F inextinguible, plus de tige, et une fleur unique apparaît très tôt.
-    - si A est muté, on peut commencer à faire une fleur, mais sans y parvenir, car F tout seul n'est plus maintenu. Et à force d'essayer, on empile des "petites boules"... C'est le chou-fleur !
+    - si le gÃ¨ne F est mutÃ© (rendu inactif), ou T rendu inextinguible, pas de fleur !
+    - Ã  l'inverse, si T est mutÃ© ou F inextinguible, plus de tige, et une fleur unique apparaÃ®t trÃ¨s tÃ´t.
+    - si A est mutÃ©, on peut commencer Ã  faire une fleur, mais sans y parvenir, car F tout seul n'est plus maintenu. Et Ã  force d'essayer, on empile des "petites boules"... C'est le chou-fleur !
 
 

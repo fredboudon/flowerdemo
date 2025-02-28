@@ -1,11 +1,11 @@
-Déshabillez-moi...
+DÃ©shabillez-moi...
 
-Cette démonstration vous permet d'apprendre ou de vous rappeler les noms des quatre types d'organes d'une fleur simple. Ces organes sont organisés en anneaux concentriques, les "verticilles".
+Cette dÃ©monstration vous permet d'apprendre ou de vous rappeler les noms des quatre types d'organes d'une fleur simple. Ces organes sont organisÃ©s en anneaux concentriques, les "verticilles".
 
-Ces verticilles, au nombre de 4 sont constitués des organes suivant, de l'extérieur vers le centre :
-    les sépales
-    les pétales
-    les étamines
+Ces verticilles, au nombre de 4 sont constituÃ©s des organes suivant, de l'extÃ©rieur vers le centre :
+    les sÃ©pales
+    les pÃ©tales
+    les Ã©tamines
     les carpelles (ici un seul), qui forment le pistil.
 
 
