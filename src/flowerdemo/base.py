@@ -1,7 +1,7 @@
 from openalea.plantgl.gui.qt.QtCore import QObject, Qt, pyqtSignal, QTimer
 from openalea.plantgl.gui.qt.QtGui import  QImage, QFontMetrics, QFont, QColor, QPalette
 from openalea.plantgl.gui.qt.QtWidgets import   QWidget, QVBoxLayout
-#from openalea.plantgl.gui.qt.QtOpenGL import QGLWidget
+from openalea.plantgl.gui.qt.QtGui import QOpenGLTexture
 
 from openalea.lpy import *
 from openalea.plantgl.all import *
@@ -46,15 +46,15 @@ class GLFrame:
     
     def hide(self): 
         self.visible = False
-        if self.parent.isVisible(): self.parent.updateGL()
+        if self.parent.isVisible(): self.parent.update()
         
     def show(self): 
         self.visible = True
-        if self.parent.isVisible(): self.parent.updateGL()
+        if self.parent.isVisible(): self.parent.update()
         
     def toogleVisibility(self): 
         self.visible = not self.visible
-        if self.parent.isVisible(): self.parent.updateGL()
+        if self.parent.isVisible(): self.parent.update()
         
     def resize(self,width,height):
         self.width = width
@@ -169,8 +169,15 @@ class GLButton (Action,GLFrame):
             self.enabled = self.__defaultenabled
             
         
-    def importTexture(self,img):    
-        return self.parent.bindTexture(img)
+    def importTexture(self,img):
+        self.texture = QOpenGLTexture(img);
+        #qgl_texture->setWrapMode(QOpenGLTexture::DirectionS, texture->getRepeatS() ? QOpenGLTexture::Repeat : QOpenGLTexture::ClampToEdge);
+        #qgl_texture->setWrapMode(QOpenGLTexture::DirectionT, texture->getRepeatT() ? QOpenGLTexture::Repeat : QOpenGLTexture::ClampToEdge);
+        #qgl_texture->setMinMagFilters(QOpenGLTexture::LinearMipMapNearest, QOpenGLTexture::LinearMipMapNearest);
+        #qgl_texture->generateMipMaps();
+        self.texture.create()
+        self.textureid = self.texture.bind()
+        return self.textureid #self.parent.bindTexture(img)
        
     def draw(self):
         if self.visible:
@@ -223,7 +230,7 @@ class GLButton (Action,GLFrame):
             glLineWidth(1)
             if not self.__text is None:
                 glColor4f(self.textColor.redF(),self.textColor.greenF(),self.textColor.blueF(),self.textColor.alphaF())
-                self.parent.drawText(self.__textx,self.__texty,self.__text)
+                self.parent.drawText(int(self.__textx),int(self.__texty),self.__text)
             glEnable(GL_LIGHTING)
             self.parent.stopScreenCoordinatesSystem()
         
@@ -275,7 +282,7 @@ class GLTextBox  (Action,GLFrame):
             print(line)
             if qf.width(line) > w:
                 while qf.width(line) > w:
-                    for i in range(0,len(line)):
+                    for i in range(floor(w/fmw),len(line)):
                         if qf.width(line,i) > w:
                             if line[i].isalnum() and line[i-1].isalnum():
                                 nlines.append(line[0:i-1]+('-' if line[i-2].isalnum() else ''))
@@ -532,7 +539,7 @@ class LpyModelView (SceneView):
     
     def plot(self, scene):
         self.setScene(scene)
-        self.widget.updateGL()
+        self.widget.update()
         if self.__animated:
             QApplication.processEvents()
 
@@ -566,7 +573,7 @@ class LpyModelView (SceneView):
         
     def run(self):
         self.setScene(self.computeScene())
-        self.widget.updateGL()
+        self.widget.update()
         
     def animate(self):
         self.animationStarted.emit()
@@ -689,7 +696,7 @@ class LpyModelWithCacheView (LpyModelView):
     def run(self):
         conf = tuple([self.variables[var] for var in self.__cachedcariables])
         self.setScene(self.cache[conf])
-        self.widget.updateGL()   
+        self.widget.update()   
     
 
 class DemoApp(QWidget):
@@ -801,14 +808,14 @@ class DemoWidget(QGLViewer):
         if widget:
             widget.focus = True
             self.focusWidget = widget
-        self.updateGL()
+        self.update()
     
     def disableButtonInteraction(self): self.setButtonInteraction(False)   
     def enableButtonInteraction(self): self.setButtonInteraction(True)
     def setButtonInteraction(self,enabled):
         for button in self.activeWidgets:
             button.enabled = enabled
-        self.updateGL()
+        self.update()
         
     def setMouseInteraction(self,enabled):
         self.mouseinteraction = enabled
@@ -861,7 +868,7 @@ class DemoWidget(QGLViewer):
             self.__currentview = id
             self.currentview.openView()
             self.currentview.resizeWidgetEvent(self.width(),self.height())
-            if self.isVisible() : self.updateGL()
+            if self.isVisible() : self.update()
         else:
             self.__currentview = None
         
@@ -887,8 +894,8 @@ class DemoWidget(QGLViewer):
             msg = "Initialisation ... "+progress
             fm = QFontMetrics(self.font())
             tw = fm.width(msg)
-            self.drawText((self.width()-tw)/2, self.height()/2, msg)
-            QTimer.singleShot(1,self.updateGL)
+            self.drawText(int((self.width()-tw)/2), int(self.height()/2), msg)
+            QTimer.singleShot(1,self.update)
     
     def draw(self):
         if not self.__initiated__:
@@ -932,7 +939,7 @@ class DemoWidget(QGLViewer):
         if self.mouseinteraction:
             if self.selectedWidget:
                 if self.selectedWidget.mouseReleaseEvent(event) :
-                    self.updateGL()
+                    self.update()
                     self.selectedWidget = None
             elif not self.__currentview is None:
                 if not self.currentview.mouseReleaseEvent(event):

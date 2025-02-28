@@ -39,8 +39,8 @@ class BouquetView(LpyModelWithCacheView):
         self.buttonAnimate.toggled = True
         self.addButton(self.buttonAnimate)
         
-        QObject.animationStarted.connect(parent.disableButtonInteraction)
-        QObject.animationStopped.connect(parent.enableButtonInteraction)
+        self.animationStarted.connect(parent.disableButtonInteraction)
+        self.animationStopped.connect(parent.enableButtonInteraction)
         
         self.createHelpWidgetFromFile()
         

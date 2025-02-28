@@ -39,7 +39,7 @@ class MenuView(SceneView):
         scene = Scene(str(get_shared_model(self.base+'.bgeom')))
         
         # petals
-        info = eval(file(get_shared_model(self.base+'-petalid.txt')).readline())
+        info = eval(open(get_shared_model(self.base+'-petalid.txt')).readline())
         self.ids,self.petalangle = [i for i,j in info ],[j for i,j in info ]
         
         self.petals = dict([(i,scene.find(i)) for i in self.ids])
@@ -69,7 +69,7 @@ class MenuView(SceneView):
     
     def openView(self):
         SceneView.openView(self)
-        QObject.connect(self.widget,SIGNAL('interpolationFinished()'),self.endTransition)
+        self.widget.interpolationFinished.connect(self.endTransition)
         self.resizeWidgetEvent(self.widget.width(),self.widget.height())
         if self.scene:
             self.updateCamera()
@@ -109,7 +109,7 @@ class MenuView(SceneView):
         else:
             self.selectedid = -1
         self.petalrenderer.clear()
-        self.widget.updateGL()
+        self.widget.update()
         
     def mousePressEvent(self,event):
         selection = self.getSelection(event.pos())
