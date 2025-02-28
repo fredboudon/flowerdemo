@@ -1,6 +1,6 @@
-from base import *
-from config import *
-from PyQt4.QtCore import QObject, SIGNAL
+from .base import *
+from .config import *
+from openalea.plantgl.gui.qt.QtCore import QObject, Signal
 
 class BouquetView(LpyModelWithCacheView):
     def __init__(self,parent):
@@ -25,7 +25,7 @@ class BouquetView(LpyModelWithCacheView):
             
         # second line of button
         self.button2width,self.button2heigth = 150,60
-        for i in xrange(3,5):
+        for i in range(3,5):
             self.buttons[i].toggled = True
             self.buttons[i].resize(self.button2width,self.button2heigth)
         
@@ -39,8 +39,8 @@ class BouquetView(LpyModelWithCacheView):
         self.buttonAnimate.toggled = True
         self.addButton(self.buttonAnimate)
         
-        QObject.connect(self,SIGNAL('animationStarted()'),parent.disableButtonInteraction)
-        QObject.connect(self,SIGNAL('animationStopped()'),parent.enableButtonInteraction)
+        QObject.animationStarted.connect(parent.disableButtonInteraction)
+        QObject.animationStopped.connect(parent.enableButtonInteraction)
         
         self.createHelpWidgetFromFile()
         
@@ -69,14 +69,14 @@ class BouquetView(LpyModelWithCacheView):
         startw = (w - (3 * self.button1width + 2 * self.buttongap))/2.0
         starth = h-20- self.button1heigth-self.button2heigth-self.buttongap
         
-        for i in xrange(3):
+        for i in range(3):
             button = self.buttons[i]
             button.move(startw,starth)
             startw += self.button1width+self.buttongap
         
         startw = (w - (2 * self.button2width + self.buttongap))/2.0
         starth = h - 20- self.button2heigth
-        for i in xrange(3,5):
+        for i in range(3,5):
             button = self.buttons[i]
             button.move(startw,starth)
             startw += self.button2width+self.buttongap

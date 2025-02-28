@@ -21,12 +21,19 @@ import sys
 import os
 
 from setuptools import setup, find_packages
-from openalea.deploy.metainfo import read_metainfo
 
 # Reads the metainfo file
-metadata = read_metainfo('metainfo.ini', verbose=True)
-for key,value in metadata.iteritems():
-    exec("%s = '%s'" % (key, value))
+version = '1.2.0'
+release = '1.2'
+name = 'VPlants.FlowerDemo'
+package = 'flowerdemo'
+description= 'Flower Demo for Science Festival.'
+long_description= 'Demo to manipulate flowers architecture and genes'
+authors= 'Frederic Boudon'
+authors_email = 'frederic.boudon@cirad.fr'
+url = 'https://github.com/fredboudon/flowerdemo'
+license = 'Cecill-C'
+
 
 #The metainfo files must contains
 # version, release, project, name, namespace, pkg_name,
@@ -53,10 +60,10 @@ for key,value in metadata.iteritems():
 # (the 'package_dir' dictionary must content the pkg_rootdir and all top-level pakages under it)
 
 pkg_root_dir = 'src'
-pkgs = [ pkg for pkg in find_packages(pkg_root_dir) if namespace not in pkg]
+pkgs = [ pkg for pkg in find_packages(pkg_root_dir) ]
 top_pkgs = [pkg for pkg in pkgs if  len(pkg.split('.')) < 2]
-packages = [ namespace + "." + pkg for pkg in pkgs]
-package_dir = dict( [('',pkg_root_dir)] + [(namespace + "." + pkg, pkg_root_dir + "/" + pkg) for pkg in top_pkgs] )
+packages = pkgs 
+package_dir = dict( [('',pkg_root_dir)] + [( pkg, pkg_root_dir + "/" + pkg) for pkg in top_pkgs] )
 
 # List of top level wralea packages (directories with __wralea__.py) 
 # (to be kept only if you have visual components)
@@ -67,19 +74,10 @@ package_dir = dict( [('',pkg_root_dir)] + [(namespace + "." + pkg, pkg_root_dir 
 # (allows 'one click' installation for windows user)
 # (linux users generally want to void this behaviour and will use the dependance list of your documentation)
 # (dependance to deploy is mandatory for runing this script)
-setup_requires = ['openalea.deploy']
-if("win32" in sys.platform):
-    install_requires = ['VPlants.PlantGL','VPlants.Lpy','pyqglviewer','PyOpenGL']
-else:
-    install_requires = []
-# web sites where to find eggs
-dependency_links = ['http://openalea.gforge.inria.fr/pi']
-
 
 # scons build-prefix 
 #(to be kept only if you contruct C/C++ binaries)
 
-build_prefix = "build-scons"
 
 
 
@@ -99,15 +97,8 @@ setup(
     # package installation
     packages= packages,	
     package_dir= package_dir,
-    # Namespace packages creation by deploy
-    namespace_packages = [namespace],
-    create_namespaces = True,
     # tell setup not  tocreate a zip file but install the egg as a directory (recomended to be set to False)
     zip_safe= False,
-    # Dependencies
-    setup_requires = setup_requires,
-    install_requires = install_requires,
-    dependency_links = dependency_links,
 
 
     # Binary installation (if necessary)
@@ -134,8 +125,8 @@ setup(
         #'console_scripts': [
         #       'fake_script = openalea.fakepackage.amodule:console_script', ],
         'gui_scripts': [
-              'flowerdemo = vplants.flowerdemo.main:main',
-              'flowerdemo3 = vplants.flowerdemo.main3:main3',],
+              'flowerdemo = flowerdemo.main:main',
+              'flowerdemo3 = flowerdemo.main3:main3',],
         #	'wralea': wralea_entry_points
         },
     )

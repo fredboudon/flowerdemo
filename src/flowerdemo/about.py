@@ -1,5 +1,5 @@
 # -*- coding: latin-1 -*-
-from base import *
+from .base import *
 
 
 

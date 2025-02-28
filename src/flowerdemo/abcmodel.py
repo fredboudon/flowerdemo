@@ -1,5 +1,5 @@
-from base import *
-from config import *
+from .base import *
+from .config import *
 
 class ABCView(LpyModelView):
     def __init__(self,parent):

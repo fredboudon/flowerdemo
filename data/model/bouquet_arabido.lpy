@@ -161,7 +161,7 @@ production:
 
 Rosette:
   nproduce ^(80)_(.05)
-  for i in xrange(12):
+  for i in range(12):
     nproduce Leaf(leafsize*15.+i*.1) &(80)F(.05)^(90)+(137)&(10)
   produce &(80)
 
@@ -309,7 +309,7 @@ ParametricSurface(axis,section,width,length,nb_segment,size):
    nproduce [/(180) SetGuide(axis,length*size)  
    if not section is None: nproduce SetContour(section) 
    nproduce _(width(0)) StartGC()
-   for i in xrange(nb_segment):
+   for i in range(nb_segment):
      x = i*dx
      nproduce F(size*dx*length,size*width(x+dx))
    nproduce EndGC()]

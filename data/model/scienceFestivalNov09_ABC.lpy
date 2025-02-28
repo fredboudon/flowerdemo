@@ -162,11 +162,11 @@ maximum depth: 1
 
 FA(t): 
   p=0
-  for s in xrange(4): # loop on the states
+  for s in range(4): # loop on the states
     zone_size = pth[s+1]-pth[s]
     l = zone_size/nbwhorls[s] # normalized length
     #print "s= ", s, " nbwhorls= ", nbwhorls[s]
-    for i in xrange(nbwhorls[s]):
+    for i in range(nbwhorls[s]):
       p=p+l
       w = flowerProfile(p) # normalized width
       l = l * flowerHeight # scaling length
@@ -175,17 +175,17 @@ FA(t):
       #print "beta = ", beta
       nproduce FI(s,l,w,0)[
       if s == 0 and verticille_1: # sepal only
-        for i in xrange(nb_petal): 
+        for i in range(nb_petal): 
           if noise : ran_insert = gauss(insert_sepal_mu,insert_sepal_sigma)
           else: ran_insert = 0.
           nproduce /(360/nb_sepal) [  &(-90) f(w) &(+90) &(-beta+opening(p)*360+ran_insert) OrgV1] 
       if s == 1 and verticille_2: # petals only
-        for i in xrange(nb_petal): 
+        for i in range(nb_petal): 
           if noise : ran_insert = gauss(insert_petal_mu,insert_petal_sigma)
           else: ran_insert = 0.
           nproduce /(360/nb_petal) [  &(-90) f(w) &(+90) &(-beta+opening(p)*360+ran_insert) OrgV2] 
       if s == 2 and verticille_3: # stamen only
-        for i in xrange(nb_stamen): 
+        for i in range(nb_stamen): 
           nproduce /(360/nb_stamen) [  &(-90) f(w) &(+90) &(-beta+opening(p)*360) OrgV3] 
       if s == 3 and verticille_4: #carpel
         nproduce  [;(1) &(-90) OrgV4]
@@ -257,7 +257,7 @@ ParametricSurface(axis,section,width,length,nb_segment):
    nproduce [  
    if not section is None: nproduce SetContour(section) 
    nproduce _(width(0)) /(180)StartGC() &(-degrees(angle(Vector2.OX,axis.getTangentAt(param(x)))))
-   for i in xrange(nb_segment):
+   for i in range(nb_segment):
      x = i*dx
      a = angle(axis.getTangentAt(param(x)),axis.getTangentAt(param(x+dx)))
      nproduce &(-degrees(a))F(dx*length,width(x+dx))

@@ -1,6 +1,6 @@
-from base import *
-from PyQt4 import QtGui, QtCore
-from config import *
+from .base import *
+from openalea.plantgl.gui.qt import QtGui, QtCore
+from .config import *
 
 def roundup(a,b):
     m,r = divmod(a,b)
@@ -15,17 +15,17 @@ class GeneShapeView(LpyModelView):
         self.imgs = ['B-DNA_'+str(x)+'m.png' for x in range(1,13)]
         self.icons = [QtGui.QIcon(get_shared_image(fil)) for fil in self.imgs]
         
-        curve_names,curves = zip(*self.lsystem.context()['__curves__'])
-        curve_values = dict(zip(range(len(curves)), curves))
+        curve_names,curves = list(zip(*self.lsystem.context()['__curves__']))
+        curve_values = dict(list(zip(list(range(len(curves))), curves)))
         
         petal_curve_parameter = [ ('petal_nerve', [curve_values[k] for k in range(8,14)]) ]
-        color_parameter = [('petal_color', range(8,16))]
+        color_parameter = [('petal_color', list(range(8,16)))]
         
-        petal_length_parameter = [('petal_length',range(4,12)) ]
-        stamen_length_parameter = [('stamen_length',range(3,12))] 
-        carpel_length_parameter = [('carpel_length',range(3,12)) ]
+        petal_length_parameter = [('petal_length',list(range(4,12))) ]
+        stamen_length_parameter = [('stamen_length',list(range(3,12)))] 
+        carpel_length_parameter = [('carpel_length',list(range(3,12))) ]
         
-        whorl_parameter = [('nb_petal', range(3,10))]
+        whorl_parameter = [('nb_petal', list(range(3,10)))]
         
         self.variations = petal_curve_parameter + color_parameter 
         self.variations += petal_length_parameter + stamen_length_parameter + carpel_length_parameter 
@@ -76,7 +76,7 @@ class GeneShapeView(LpyModelView):
                 combo.setMaximumSize(self.iconSize[0],self.iconSize[1])
                 combo.setIconSize(QtCore.QSize(self.iconSize[0],self.iconSize[1]))
                 callback = make_callback(name, values)
-                QtCore.QObject.connect(combo,QtCore.SIGNAL("activated(int)"), callback)
+                combo.activated.connect(callback)
                 #combo.hide()
                 
                 if i == self.genebyline : 

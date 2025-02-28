@@ -10,7 +10,7 @@ from openalea.lpy import *
 from openalea.plantgl.all import *
 from PyQGLViewer import *
 
-from config import get_shared_model, get_shared_image
+from .config import get_shared_model, get_shared_image
 
 def make_callback(m, n, d):
     def anon(value):
@@ -157,15 +157,15 @@ def main():
     btn_icons = [QtGui.QIcon(get_shared_image(fil)) for fil in btn_imgs]
 
     # Define all the combobox params
-    curve_names,curves = zip(*lsys.context()['__curves__'])
-    curve_values = dict(zip(range(len(curves)), curves))
+    curve_names,curves = list(zip(*lsys.context()['__curves__']))
+    curve_values = dict(list(zip(list(range(len(curves))), curves)))
     curve_params = [(name, curve_values) for name in curve_names]
 
     ang_params = [('phylangle',[x*20 for x in range(8)])]
-    size_params = [('petal_length',range(4,12)), ('stamen_length',range(3,12)), ('carpel_length',range(3,12))]
-    color_params = [('petal_color', range(8,16))]
+    size_params = [('petal_length',list(range(4,12))), ('stamen_length',list(range(3,12))), ('carpel_length',list(range(3,12)))]
+    color_params = [('petal_color', list(range(8,16)))]
     petal_curve_params = [ ('petal_nerve', [curve_values[k] for k in range(8,14)]) ]
-    whorl_params = [('nb_petal', range(3,10))]
+    whorl_params = [('nb_petal', list(range(3,10)))]
 
     params = petal_curve_params + color_params + size_params + whorl_params
 

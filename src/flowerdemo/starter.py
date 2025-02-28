@@ -1,11 +1,11 @@
-from base import *
-from PyQt4.Qt import Qt, QTimer
+from .base import *
+from openalea.plantgl.gui.qt.QtCore import QTimer
 from OpenGL.GL import glPushName, glPopName
 import traceback as tb
 import sys
 from math import pi
-from pglnqgl import toV3
-from vplants.plantgl.math import angle, Vector3
+from .pglnqgl import toV3
+from openalea.plantgl.math import angle, Vector3
 from math import radians, degrees, pi, cos, sin
 
 class MenuView(SceneView):
@@ -43,11 +43,11 @@ class MenuView(SceneView):
         self.ids,self.petalangle = [i for i,j in info ],[j for i,j in info ]
         
         self.petals = dict([(i,scene.find(i)) for i in self.ids])
-        for i in self.petals.itervalues(): del scene[scene.index(i)]
+        for i in self.petals.values(): del scene[scene.index(i)]
         
         self.petalscene = Scene([self.petals[i] for i in self.ids])
         
-        self.petalangle = map(radians,self.petalangle)
+        self.petalangle = list(map(radians,self.petalangle))
         self.setScene(scene)
         self.updateCamera()
         
@@ -61,7 +61,7 @@ class MenuView(SceneView):
         i = 0
         for pid,img in panels:
             sh = self.petalscene[i]
-            print i,sh.id,pid, img, self.petalangle[i]
+            print(i,sh.id,pid, img, self.petalangle[i])
             sh.appearance = Texture2D('texture_'+str(i),ImageTexture(str(get_shared_image(img))), Texture2DTransformation('',scale=(-1,5/7.),rotationAngle = pi/2))
             self.petal2panel[sh.id] = pid
             i += 1
@@ -156,7 +156,7 @@ class MenuView(SceneView):
         self.panelid = None
         try:
             self.widget.setCurrentViewId(panelid)
-        except Exception,e :                
+        except Exception as e :                
             tb.print_exception(*sys.exc_info())
             self.openView()
             self.widget.displayMessage('Exception:'+repr(e),3000)

@@ -218,20 +218,20 @@ FA(t):
       # FI is a receptacle internode
       nproduce FI(s,len2,w2,0)[SetGuide()
       if s == 0 and verticille_1 : # sepal only
-        for j in xrange(nb_sepal): 
+        for j in range(nb_sepal): 
           if noise : ran_insert = insert_sepal_mu + random()*insert_sepal_sigma # gauss(insert_sepal_mu,insert_sepal_sigma)
           else: ran_insert = 0.
           nproduce /(360/nb_sepal) [ ^(-90) f(w2) ^(90) ^(-beta+opening(p)*360+ran_insert) OrgV1] 
       if s == 1 and verticille_2: # petals only
-        for j in xrange(nb_petal): 
+        for j in range(nb_petal): 
           if noise : ran_insert = insert_petal_mu + random()*insert_petal_sigma #gauss(insert_petal_mu,insert_petal_sigma)
           else: ran_insert = 0.
           nproduce /(360/nb_petal) [ ^(-90) f(w2) ^(90) ^(-beta+opening(p)*360+ran_insert) OrgV2] 
       if s == 2 and verticille_3: # stamen only
-        for j in xrange(nb_stamen): 
+        for j in range(nb_stamen): 
           nproduce /(360/nb_stamen) [ ^(-90) f(w2) ^(90) ^(-beta+opening(p)*360) OrgV3] 
       if s == 3 and verticille_4: # carpel only
-        for j in xrange(nb_carpel): 
+        for j in range(nb_carpel): 
           # print "j = ",j,"beta = ", beta, "p = ", p,"opening = ", opening(p)
           nproduce /(360/nb_carpel) [ ^(-90) f(w2) ^(90) ^(beta-opening(p)*360) OrgV4]       
       nproduce ] 
@@ -336,7 +336,7 @@ ParametricSurface(axis,section,width,length,nb_segment,size):
    nproduce [SetGuide(axis,length*size)  
    if not section is None: nproduce SetContour(section) 
    nproduce _(width(0)) StartGC()
-   for i in xrange(nb_segment):
+   for i in range(nb_segment):
      x = i*dx
      nproduce F(size*dx*length,size*width(x+dx))
    nproduce EndGC()]

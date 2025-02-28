@@ -1,5 +1,7 @@
-from PyQt4.Qt import QObject, QImage, Qt, SIGNAL, QApplication, QFontMetrics, QTimer, QColor, QFont, QString, QWidget, QVBoxLayout, QPalette
-from PyQt4.QtOpenGL import QGLWidget
+from openalea.plantgl.gui.qt.QtCore import QObject, Qt, pyqtSignal, QTimer
+from openalea.plantgl.gui.qt.QtGui import  QImage, QFontMetrics, QFont, QColor, QPalette
+from openalea.plantgl.gui.qt.QtWidgets import   QWidget, QVBoxLayout
+#from openalea.plantgl.gui.qt.QtOpenGL import QGLWidget
 
 from openalea.lpy import *
 from openalea.plantgl.all import *
@@ -7,7 +9,7 @@ from PyQGLViewer import *
 from OpenGL.GL import *
 from OpenGL.GLU import gluErrorString
 
-from config import get_shared_model, get_shared_image
+from .config import get_shared_model, get_shared_image
 from copy import deepcopy
 import os
 
@@ -136,9 +138,10 @@ class GLButton (Action,GLFrame):
             self.__texty = self.y+qf.ascent()+(self.height-qf.height())/2
     
     def __del__(self):
-        self.parent.deleteTexture(self.textureId)
-        if self.imgoff :
-            self.parent.deleteTexture(self.textureOffId)
+        if self.textureId:
+            self.parent.deleteTexture(self.textureId)
+            if self.imgoff and self.textureOffId:
+                self.parent.deleteTexture(self.textureOffId)
     
     def init(self):
         if not self.__initialized__:
@@ -260,6 +263,8 @@ class GLTextBox  (Action,GLFrame):
         self.__initialized__ = False
     
     def setText(self,text):
+        from math import floor
+        print(text)
         if len(text) == 0 : return
         lines = text.split('\n')
         qf = QFontMetrics(self.font)
@@ -267,9 +272,10 @@ class GLTextBox  (Action,GLFrame):
         nlines = []
         w = self.width-2*self.margin
         for line in lines:
+            print(line)
             if qf.width(line) > w:
                 while qf.width(line) > w:
-                    for i in xrange(w/fmw,len(line)):
+                    for i in range(0,len(line)):
                         if qf.width(line,i) > w:
                             if line[i].isalnum() and line[i-1].isalnum():
                                 nlines.append(line[0:i-1]+('-' if line[i-2].isalnum() else ''))
@@ -278,9 +284,9 @@ class GLTextBox  (Action,GLFrame):
                                 nlines.append(line[0:i])
                                 line = line[i:]
                             break
-                nlines.append(QString(line))
+                nlines.append(line)
             else:
-                nlines.append(QString(line))
+                nlines.append(line)
         self.__text = nlines
         self.__computeTextPosition()
     
@@ -331,8 +337,8 @@ class GLTextBox  (Action,GLFrame):
     def mcheckError(self,txt=None):
         err = glGetError()
         if err != GL_NO_ERROR:
-            if txt: print txt,':',
-            print gluErrorString(err)
+            if txt: print(txt,':', end=' ')
+            print(gluErrorString(err))
             
         
     def mousePressEvent(self,event):
@@ -356,7 +362,7 @@ class GLTextBox  (Action,GLFrame):
 
 class View(QObject):
     def __init__(self, parent=None, name = ''):
-        from config import display_help
+        from .config import display_help
         QObject.__init__(self, parent)
         self.widget = parent
         self.name = name
@@ -442,8 +448,8 @@ class View(QObject):
     
     def getTextFromFile(self,fname = None):
         if fname is None: fname = self.name.lower()+'.txt'
-        from config import get_shared_data
-        return open(get_shared_data(fname)).read()
+        from .config import get_shared_data
+        return open(get_shared_data(fname), encoding='utf-8', errors='ignore').read()
         
     def createHelpWidgetFromFile(self,fname=None,height=20):
         if self.display_help:
@@ -515,6 +521,8 @@ class SceneView(View):
         View.draw(self)
 
 class LpyModelView (SceneView):
+    animationStarted = pyqtSignal()
+    animationStopped = pyqtSignal()
     def __init__(self,parent = None, name = ''):
         SceneView.__init__(self,parent,name)
         self.lsystem = None
@@ -561,13 +569,13 @@ class LpyModelView (SceneView):
         self.widget.updateGL()
         
     def animate(self):
-        self.emit(SIGNAL('animationStarted()'))
+        self.animationStarted.emit()
         self.__animated = True
         self.lsystem = Lsystem(self.lsystem_file)
         self.lsystem.context().updateNamespace(self.variables)
         self.lsystem.animate()
         self.__animated = False
-        self.emit(SIGNAL('animationStopped()'))
+        self.animationStopped.emit()
 
 import sys
 
@@ -592,10 +600,10 @@ class LpyModelWithCacheView (LpyModelView):
     
     def computeCache(self,fname = None,rep = ''):
         from PyQt4.QtCore import QDir
-        print 'compute cache'
-        self.__cachedcariables = list(self.variations.iterkeys())
+        print('compute cache')
+        self.__cachedcariables = list(self.variations.keys())
         if not fname or not self.__use_cache:
-            print 'no cache :', not self.__use_cache
+            print('no cache :', not self.__use_cache)
             for i,maxp in self.__computeCache():
                 yield i,maxp
         else:
@@ -605,26 +613,26 @@ class LpyModelWithCacheView (LpyModelView):
             tmpdir = str(QDir.tempPath())
             cachedir = join(tmpdir,'flowerdemo-cache')
             if '--re-cache' in sys.argv and exists(cachedir):
-                print 'Remove cache dir :',repr(cachedir)
+                print('Remove cache dir :',repr(cachedir))
                 try:
                     rmtree(cachedir)
-                except Exception,e: 
-                    print e
+                except Exception as e: 
+                    print(e)
                     pass
             lcachedir = join(cachedir,rep)
             gfname = join(lcachedir,fname)
             outdated = False
             timestampfile = join(lcachedir,'timestamp.txt')
             self.cache = {}
-            if  exists(timestampfile) and long(eval(file(timestampfile).readline())) < long(os.stat(self.lsystem_file).st_mtime):
-                print 'Outdated cache for lsystem',self.lsystem_file
+            if  exists(timestampfile) and int(eval(file(timestampfile).readline())) < int(os.stat(self.lsystem_file).st_mtime):
+                print('Outdated cache for lsystem',self.lsystem_file)
                 outdated = True
             if not outdated and exists(gfname):
-                print 'looking for cache files'
+                print('looking for cache files')
                 cache = eval(file(gfname).readline())
                 maxp = len(cache)
                 i = 0
-                for key,value in cache.iteritems():
+                for key,value in cache.items():
                     valuepath = join(lcachedir,value)
                     if exists(valuepath):
                         self.cache[key] = Scene(valuepath)
@@ -633,9 +641,9 @@ class LpyModelWithCacheView (LpyModelView):
                         break
                     i+=1
                     yield i,maxp
-                print 'load cache ',fname
+                print('load cache ',fname)
             if len(self.cache) == 0:
-                print 'compute cache'
+                print('compute cache')
                 for i,maxp in self.__computeCache():
                     yield i,maxp
                 if not exists(cachedir):
@@ -643,16 +651,16 @@ class LpyModelWithCacheView (LpyModelView):
                 if not exists(lcachedir):
                     mkdir(lcachedir)
                 cache = {}
-                for key,value in self.cache.iteritems():
+                for key,value in self.cache.items():
                     lfname = '__'+''.join(['_' if not i.isalnum() else i for i in str(key)])+'.bgeom'
                     value.save(join(lcachedir,lfname))
                     cache[key] = lfname
                 stream = file(gfname,'w')
                 stream.write(str(cache)+'\n')
                 stream = file(timestampfile,'w')
-                stream.write(str(long(os.stat(self.lsystem_file).st_mtime))+'\n')
+                stream.write(str(int(os.stat(self.lsystem_file).st_mtime))+'\n')
                 yield 1,1
-                print 'save cache',repr(fname)
+                print('save cache',repr(fname))
         
     def __computeCache(self):
         from copy import deepcopy 
@@ -673,7 +681,7 @@ class LpyModelWithCacheView (LpyModelView):
         maxp = len(config)
         for i,conf in enumerate(config):
             self.variables = deepcopy(previousconf)
-            self.variables.update(dict(zip(self.__cachedcariables,conf)))
+            self.variables.update(dict(list(zip(self.__cachedcariables,conf))))
             self.cache[tuple(conf)] = self.computeScene()
             yield i+1,maxp
         self.variables = deepcopy(previousconf)
@@ -717,7 +725,7 @@ class DemoApp(QWidget):
         
         
 class DemoWidget(QGLViewer):
-    
+    interpolationFinished = pyqtSignal()
     def __init__(self, parent=None):
         QGLViewer.__init__(self, parent)
         self.bottomwidget = parent.bottomwidget
@@ -736,8 +744,8 @@ class DemoWidget(QGLViewer):
         self.mouseinteraction = True
         self.viewInterpolator = KeyFrameInterpolator()
         self.viewInterpolator.setFrame(self.camera().frame())
-        QObject.connect(self.viewInterpolator, SIGNAL('interpolated()'), self.updateGL)
-        QObject.connect(self.viewInterpolator, SIGNAL('endReached()'), self.endInterpolateView)
+        self.viewInterpolator.interpolated.connect(self.update)
+        self.viewInterpolator.endReached.connect(self.endInterpolateView)
         self.__viewIter__ = iter(self.__views)
         self.__valueViewIter__ = None
         self.__first_initialization__ = True
@@ -758,7 +766,7 @@ class DemoWidget(QGLViewer):
     def doInitialisation(self):
         if not self.__valueViewIter__ is None:
             try:
-                result = self.__valueViewIter__.next()
+                result = next(self.__valueViewIter__)
                 if not result is None:
                     p, maxp = result
                     return self.__initView__.name + ' ('+str(p*100./maxp)+'%)'
@@ -768,14 +776,14 @@ class DemoWidget(QGLViewer):
                 self.__valueViewIter__ = None
         if self.__valueViewIter__ is None:
             try:
-                self.__initView__  = self.__viewIter__.next()
+                self.__initView__  = next(self.__viewIter__)
                 self.__valueViewIter__ = self.__initView__.initView()
                 if self.__valueViewIter__ is None:
                     return self.__initView__.name
                 else:
                     return self.doInitialisation()
-            except Exception, e:
-                print repr(e)
+            except Exception as e:
+                print(repr(e))
                 del self.__initView__
                 self.__viewIter__ = None
                 self.__valueViewIter__ = None
@@ -935,7 +943,7 @@ class DemoWidget(QGLViewer):
             if not self.currentview.keyPressEvent(event):
                 QGLViewer.keyPressEvent(self,event)
         if event.key() == Qt.Key_P:
-            print 'pos=',self.camera().position(),'dir=',self.camera().viewDirection(),'up=',self.camera().upVector()
+            print('pos=',self.camera().position(),'dir=',self.camera().viewDirection(),'up=',self.camera().upVector())
 
     def leaveEvent(self,event):
         if not self.__currentview is None:
@@ -989,4 +997,4 @@ class DemoWidget(QGLViewer):
         self.viewInterpolator.startInterpolation()
         
     def endInterpolateView(self):
-        self.emit(SIGNAL('interpolationFinished()'))
+        self.interpolationFinished.emit()

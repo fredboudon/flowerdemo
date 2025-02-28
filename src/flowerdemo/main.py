@@ -1,23 +1,23 @@
 
 def oldmain():
-    from cambridgedemo import main
+    from .cambridgedemo import main
     main()
 
-from PyQt4.Qt import QApplication,QMainWindow
-from base import DemoApp, DemoWidget, SceneView
-from starter import MenuView
-from naked import NakedView
-from abcmodel import ABCView
-from bouquet import BouquetView
-from geneshape import GeneShapeView
-from about import AboutView
+from openalea.plantgl.gui.qt.QtWidgets import QApplication,QMainWindow
+from .base import DemoApp, DemoWidget, SceneView
+from .starter import MenuView
+from .naked import NakedView
+from .abcmodel import ABCView
+from .bouquet import BouquetView
+from .geneshape import GeneShapeView
+from .about import AboutView
 
 def help():
-    print 'FlowerDemo'
-    print ' --help -h : This help'
-    print ' --no-fullscreen : Do not use fullscreen mode'
-    print ' --no-cache : Do not use cache to speedup start of this application'
-    print ' --re-cache : Recompute cache'
+    print('FlowerDemo')
+    print(' --help -h : This help')
+    print(' --no-fullscreen : Do not use fullscreen mode')
+    print(' --no-cache : Do not use cache to speedup start of this application')
+    print(' --re-cache : Recompute cache')
     
 
 def main(args = None):
@@ -53,7 +53,7 @@ def main(args = None):
     menu.setPanels(panels)
     window.appendAboutView(AboutView(window.frame))
     #window.setCurrentViewId(1)
-    print 'show'
+    print('show')
     if '--no-fullscreen' in args:
         mainwindow.resize(800,600)
         mainwindow.show()
