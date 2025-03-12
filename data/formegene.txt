@@ -2,7 +2,7 @@ La forme des gènes...
 
 
 
-Cette démo illustre de manière naïve mais (nous l'espérons) ludique comment quelques gènes peuvent engendrer des fleurs d'apparence fort différentes.
+Cette démo illustre de manière naïve mais (nous l'espérons) ludique comment quelques gènes peuvent engendrer des fleurs d'apparences fort différentes.
 
 Chaque bouton représente un "gène", contrôlant un aspect visuel de la fleur. Les caractères ainsi modifiables sont (dans le désordre) :
     - la couleur des pétales
@@ -16,4 +16,4 @@ Chaque bouton représente un "gène", contrôlant un aspect visuel de la fleur. 
 Saurez-vous retrouver quel "gène" agit sur chacun de ces caractères ?
 
 
-Dans la nature, les gènes agissent en fait de manière bien plus complexe, ce dont vous pourrez avoir un aperçu en regardant les autres démo.
+Dans la nature, les gènes agissent en fait de manière bien plus complexe, ce dont vous pourrez avoir un aperçu en regardant les autres démos.

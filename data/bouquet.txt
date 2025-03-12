@@ -12,7 +12,7 @@ Cette démo est une simplification dans laquelle nous prenons en compte seulemen
 
 Tout comme les gènes A et C, les gènes F et T sont antagonistes et se "chassent" l'un l'autre.
 
-De plus nous avons ici le mécanisme suivant : au fur et à mesure de la croissance de la plante, le niveau local des gènes F et T augment progressivement. 
+De plus nous avons ici le mécanisme suivant : au fur et à mesure de la croissance de la plante, le niveau local des gènes F et T augmente progressivement. 
 Initialement (en bas de la plante), c'est T qui "gagne", mais F finit normalement par l'emporter. Pour réussir cela, et engendrer l'apparition de fleurs, F doit réussir à activer A. Les gènes A et F ont besoin l'un de l'autre pour rester actifs.
 Ainsi, on observe (en vrai !) les effets suivants :
     - si le gène F est muté (rendu inactif), ou T rendu inextinguible, pas de fleur !
