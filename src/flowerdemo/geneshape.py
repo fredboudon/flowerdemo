@@ -32,10 +32,12 @@ class GeneShapeView(LpyModelView):
         self.variations += whorl_parameter
         self.nbparameters = len(self.variations)
 
+        print('IconSize',self.iconSize)
         self.targetwidth = QApplication.desktop().screenGeometry().width()
         maxIconWidth = (self.targetwidth - ((self.nbparameters +1) * 10 ))/ self.nbparameters
-        iconratio = float(maxIconWidth) / self.iconSize[0]
-        self.iconSize = (maxIconWidth,self.iconSize[1]*iconratio)
+        iconratio = min(1,float(maxIconWidth) / self.iconSize[0])
+        self.iconSize = (int(self.iconSize[0]*iconratio),int(self.iconSize[1]*iconratio))
+        print('IconSize',self.iconSize)
         
         self.maxgenebyline = self.nbparameters
         self.nblines = 1
@@ -72,9 +74,11 @@ class GeneShapeView(LpyModelView):
                 self.combos.append(combo)
                 for x in range(len(values)):
                     combo.addItem( self.icons[x], '') 
-                combo.setMinimumSize(self.iconSize[0],self.iconSize[1])
-                combo.setMaximumSize(self.iconSize[0],self.iconSize[1])
-                combo.setIconSize(QtCore.QSize(self.iconSize[0],self.iconSize[1]))
+                iconsize = QtCore.QSize(int(self.iconSize[0]),int(self.iconSize[1]))
+                combo.setMinimumSize(iconsize)
+                combo.setMaximumSize(iconsize) 
+                combo.setIconSize(iconsize)
+                combo.setFixedHeight(self.iconSize[1])
                 callback = make_callback(name, values)
                 combo.activated.connect(callback)
                 #combo.hide()

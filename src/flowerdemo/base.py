@@ -1,4 +1,4 @@
-from openalea.plantgl.gui.qt.QtCore import QObject, Qt, pyqtSignal, QTimer
+from openalea.plantgl.gui.qt.QtCore import QObject, Qt, pyqtSignal, QTimer, QDir
 from openalea.plantgl.gui.qt.QtGui import  QImage, QFontMetrics, QFont, QColor, QPalette
 from openalea.plantgl.gui.qt.QtWidgets import   QWidget, QVBoxLayout
 from openalea.plantgl.gui.qt.QtGui import QOpenGLTexture
@@ -138,10 +138,13 @@ class GLButton (Action,GLFrame):
             self.__texty = self.y+qf.ascent()+(self.height-qf.height())/2
     
     def __del__(self):
-        if self.textureId:
-            self.parent.deleteTexture(self.textureId)
-            if self.imgoff and self.textureOffId:
-                self.parent.deleteTexture(self.textureOffId)
+        #if self.hasattr("texture") and self.texture:
+        #    self.parent.makeCurrent()
+        #    self.texture.destroy()
+        #    if self.imgoff and self.textureOff:
+        #        self.textureOff.destroy()
+        #    self.parent.doneCurrent()
+        pass
     
     def init(self):
         if not self.__initialized__:
@@ -156,11 +159,11 @@ class GLButton (Action,GLFrame):
                 if self.height is None:
                     self.height = self.imgV.height()
                 
-                self.textureId = self.importTexture(self.imgV)
+                self.texture = self.importTexture(self.imgV)
                 
                 if self.imgoff :  
                     self.imgoffV = QImage(self.imgoff)
-                    self.textureOffId = self.importTexture(self.imgoffV)
+                    self.textureOff = self.importTexture(self.imgoffV)
             
             self.__defaulttoggled = self.toggled
             self.__defaultenabled = self.enabled
@@ -170,14 +173,13 @@ class GLButton (Action,GLFrame):
             
         
     def importTexture(self,img):
-        self.texture = QOpenGLTexture(img);
+        texture = QOpenGLTexture(img.mirrored(vertical=True));
         #qgl_texture->setWrapMode(QOpenGLTexture::DirectionS, texture->getRepeatS() ? QOpenGLTexture::Repeat : QOpenGLTexture::ClampToEdge);
         #qgl_texture->setWrapMode(QOpenGLTexture::DirectionT, texture->getRepeatT() ? QOpenGLTexture::Repeat : QOpenGLTexture::ClampToEdge);
         #qgl_texture->setMinMagFilters(QOpenGLTexture::LinearMipMapNearest, QOpenGLTexture::LinearMipMapNearest);
         #qgl_texture->generateMipMaps();
-        self.texture.create()
-        self.textureid = self.texture.bind()
-        return self.textureid #self.parent.bindTexture(img)
+        texture.create()
+        return texture #self.parent.bindTexture(img)
        
     def draw(self):
         if self.visible:
@@ -207,11 +209,12 @@ class GLButton (Action,GLFrame):
                 glTranslatef(0,0,-0.05)
                 glEnable( GL_TEXTURE_2D )
                 if not self.toggled and self.enabled:
-                    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE  )
-                    glBindTexture(GL_TEXTURE_2D, self.textureId)
+                    self.texture.bind()
+                    # glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE  )
+                    # glBindTexture(GL_TEXTURE_2D, self.textureId)
                 else:
                     if self.imgoff:
-                        glBindTexture(GL_TEXTURE_2D, self.textureOffId)
+                        self.textureOff.bind()
                     else:
                         if not self.toggled :
                             glColor4f(1,1,1,0.7)
@@ -220,8 +223,9 @@ class GLButton (Action,GLFrame):
                                 glColor4f(0.2,0.2,0.2,0.5)
                             else:
                                 glColor4f(0.2,0.2,0.2,0.3)  
-                        glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE  )
-                        glBindTexture(GL_TEXTURE_2D, self.textureId)
+                        self.texture.bind()
+                        # glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE  )
+                        # glBindTexture(GL_TEXTURE_2D, self.textureId)
                 glMatrixMode(GL_TEXTURE)
                 glLoadIdentity()
                 self.drawTexBox()
@@ -271,7 +275,6 @@ class GLTextBox  (Action,GLFrame):
     
     def setText(self,text):
         from math import floor
-        print(text)
         if len(text) == 0 : return
         lines = text.split('\n')
         qf = QFontMetrics(self.font)
@@ -279,7 +282,6 @@ class GLTextBox  (Action,GLFrame):
         nlines = []
         w = self.width-2*self.margin
         for line in lines:
-            print(line)
             if qf.width(line) > w:
                 while qf.width(line) > w:
                     for i in range(floor(w/fmw),len(line)):
@@ -338,7 +340,7 @@ class GLTextBox  (Action,GLFrame):
                 self.mcheckError('2')
                 for i,line in enumerate(self.__text):
                     if len(line) > 0:
-                        self.parent.renderText(self.__textx,self.__texty+i*self.__texth,line,self.font)
+                        self.parent.renderText(int(self.__textx),int(self.__texty+i*self.__texth),line,self.font)
                         self.mcheckError('n'+str(i)+"'"+line+"'")
     
     def mcheckError(self,txt=None):
@@ -554,11 +556,12 @@ class LpyModelView (SceneView):
         self.lsystem = Lsystem(self.lsystem_file)
         
     def initView(self):
+        print('initview', self.__class__.__name__)
         SceneView.initView(self)
-        self.__defaultVariables = deepcopy(self.variables)
+        self._defaultVariables = deepcopy(self.variables)
         
     def openView(self):
-        self.variables = deepcopy(self.__defaultVariables)
+        self.variables = deepcopy(self._defaultVariables)
         SceneView.openView(self)
         registerPlotter(self)
     
@@ -606,8 +609,7 @@ class LpyModelWithCacheView (LpyModelView):
     
     
     def computeCache(self,fname = None,rep = ''):
-        from PyQt4.QtCore import QDir
-        print('compute cache')
+        print('compute cache', self.__class__.__name__)
         self.__cachedcariables = list(self.variations.keys())
         if not fname or not self.__use_cache:
             print('no cache :', not self.__use_cache)
@@ -619,6 +621,7 @@ class LpyModelWithCacheView (LpyModelView):
             from shutil import rmtree
             tmpdir = str(QDir.tempPath())
             cachedir = join(tmpdir,'flowerdemo-cache')
+            print('Cache : ', cachedir)
             if '--re-cache' in sys.argv and exists(cachedir):
                 print('Remove cache dir :',repr(cachedir))
                 try:
@@ -636,7 +639,7 @@ class LpyModelWithCacheView (LpyModelView):
                 outdated = True
             if not outdated and exists(gfname):
                 print('looking for cache files')
-                cache = eval(file(gfname).readline())
+                cache = eval(open(gfname,'r').readline())
                 maxp = len(cache)
                 i = 0
                 for key,value in cache.items():
@@ -662,12 +665,15 @@ class LpyModelWithCacheView (LpyModelView):
                     lfname = '__'+''.join(['_' if not i.isalnum() else i for i in str(key)])+'.bgeom'
                     value.save(join(lcachedir,lfname))
                     cache[key] = lfname
-                stream = file(gfname,'w')
-                stream.write(str(cache)+'\n')
-                stream = file(timestampfile,'w')
-                stream.write(str(int(os.stat(self.lsystem_file).st_mtime))+'\n')
-                yield 1,1
+                    print(key,lfname)
+                print(gfname)
+                with open(gfname,'w') as stream:
+                    stream.write(repr(cache)+'\n')
+                print(timestampfile)
+                with timestampfile(gfname,'w') as stream:
+                    stream.write(str(int(os.stat(self.lsystem_file).st_mtime))+'\n')
                 print('save cache',repr(fname))
+                yield 1,1
         
     def __computeCache(self):
         from copy import deepcopy 

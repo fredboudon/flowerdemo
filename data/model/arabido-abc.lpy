@@ -169,7 +169,7 @@ Annulus(N,Radius,radius):
   alp = 360./N
   prop = radius/Radius
   nproduce _(.05)f(radius)+(90-alp/2.) 
-  for i in xrange(N):
+  for i in range(N):
     nproduce +(alp)[{f(Radius*(alp*deg2rad)).+(90.+alp/2.)f(Radius*(1.-prop)).+(90-alp/2.)f(Radius*(alp*deg2rad)*prop+.001).+(90.-alp/2.)f(Radius*(1.-prop)).}]f(Radius*(alp*deg2rad))
 
 
@@ -205,10 +205,10 @@ maximum depth: 1
 
 FA(t): 
   p=0
-  for s in xrange(4): # loop on the states (=zones)
+  for s in range(4): # loop on the states (=zones)
     zone_size = pth[s+1]-pth[s] # height of the current zone
     len = zone_size/nbwhorls[s] # length of an internode in this zone
-    for i in xrange(nbwhorls[s]):
+    for i in range(nbwhorls[s]):
       p=p+len
       w = receptacleProfile(p) # normalized width
       len2 = len * receptacleHeight # scaling length
@@ -292,7 +292,7 @@ Stamen:
 Carpel:
   if carpelflag: 
     nproduce ;(5) ParametricSurface(carpel_nerve,None,carpel_width,carpel_length/10.,carpel_nb_segment,Ssize)
-    for i in xrange(10): nproduce _(.001)[\(90)f(.01)]
+    for i in range(10): nproduce _(.001)[\(90)f(.01)]
 
 
 OrgV1 :
