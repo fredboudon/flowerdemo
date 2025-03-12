@@ -23,8 +23,8 @@ import os
 from setuptools import setup, find_packages
 
 # Reads the metainfo file
-version = '1.2.0'
-release = '1.2'
+version = '1.3.0'
+release = '1.3'
 name = 'VPlants.FlowerDemo'
 package = 'flowerdemo'
 description= 'Flower Demo for Science Festival.'
