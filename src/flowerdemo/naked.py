@@ -50,7 +50,7 @@ class NakedView(LpyModelView):
         camera = self.widget.camera()
         if self.variables['stemflag'] :
             center = Vec(0.161041,0.00831789,2.53128)
-            camera.setRevolveAroundPoint(center)
+            camera.setPivotPoint(center)
             
             camera.setPosition(Vec(4.74832,4.66647,8.79487))
             camera.setUpVector(Vec(0,0,1))
@@ -59,7 +59,7 @@ class NakedView(LpyModelView):
             
         else:
             center = Vec(0,0,0)
-            camera.setRevolveAroundPoint(center)
+            camera.setPivotPoint(center)
             camera.setPosition(Vec(2.3,0,2.8))
             camera.setUpVector(Vec(-0.637331,0.0113828,0.770506))
             camera.setViewDirection(Vec(-0.770435,0.0106725,-0.63743))

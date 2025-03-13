@@ -56,7 +56,7 @@ class ABCView(LpyModelView):
     def setView(self):
         camera = self.widget.camera()
         center = Vec(0,0,0)
-        camera.setRevolveAroundPoint(center)
+        camera.setPivotPoint(center)
          
         camera.setPosition(Vec(1.8,-0.12,3.35))
         camera.setUpVector(Vec(0,0,1))

@@ -124,7 +124,7 @@ class GeneShapeView(LpyModelView):
     def setView(self):
         camera = self.widget.camera()
         center = Vec(0,0,0)
-        camera.setRevolveAroundPoint(center)
+        camera.setPivotPoint(center)
          
         camera.setPosition(Vec(2.5,-0.32,2.84))
         camera.setViewDirection(Vec(-0.71,0.05,-0.69))

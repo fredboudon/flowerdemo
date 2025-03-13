@@ -86,7 +86,7 @@ class BouquetView(LpyModelWithCacheView):
     def setView(self):
         camera = self.widget.camera()
         center = Vec(0,0,0)
-        camera.setRevolveAroundPoint(center)
+        camera.setPivotPoint(center)
         
         camera.setPosition(Vec(52,-11.2,45))
         camera.setViewDirection(Vec(-0.879266,0.192891,-0.435528))

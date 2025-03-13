@@ -84,7 +84,7 @@ class MenuView(SceneView):
         camera.setPosition(Vec(0.15,-0.0205177,8))
         camera.setViewDirection(Vec(0,0,-1))
         camera.setUpVector(Vec(-1,0,0))
-        camera.setRevolveAroundPoint(self.sceneCenter)
+        camera.setPivotPoint(self.sceneCenter)
 
         # camera constraints
         self.viewConstraint = WorldConstraint()
