@@ -32,12 +32,10 @@ class GeneShapeView(LpyModelView):
         self.variations += whorl_parameter
         self.nbparameters = len(self.variations)
 
-        print('IconSize',self.iconSize)
         self.targetwidth = QApplication.desktop().screenGeometry().width()
         maxIconWidth = (self.targetwidth - ((self.nbparameters +1) * 10 ))/ self.nbparameters
         iconratio = min(1,float(maxIconWidth) / self.iconSize[0])
         self.iconSize = (int(self.iconSize[0]*iconratio),int(self.iconSize[1]*iconratio))
-        print('IconSize',self.iconSize)
         
         self.maxgenebyline = self.nbparameters
         self.nblines = 1

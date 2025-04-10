@@ -54,15 +54,24 @@ class MenuView(SceneView):
     def resizeWidgetEvent(self,w,h):
         self.buttonAbout.move(20,h-self.buttonAbout.height-20)
             
-        
     def setPanels(self, panels):
-        
+        from os.path import join
         self.create3DMenu(len(panels))
         i = 0
         for pid,img in panels:
             sh = self.petalscene[i]
-            print(i,sh.id,pid, img, self.petalangle[i])
-            sh.appearance = Texture2D('texture_'+str(i),ImageTexture(str(get_shared_image(img))), Texture2DTransformation('',scale=(-1,5/7.),rotationAngle = pi/2))
+            # print(i,sh.id,pid, img, self.petalangle[i])
+            fname = str(get_shared_image(img))
+            if PGL_VERSION <= 0x31502:
+                nfname = join(get_cache_dir(), os.path.splitext(img)[0]+'_mirrored'+os.path.splitext(img)[1])
+                print('Mirror texture', repr(fname), 'into', repr(nfname))
+                if not os.path.exists(nfname): 
+                    img = QImage(fname)
+                    nimg = img.mirrored(False, True)
+                    nimg.save(nfname)
+                fname = nfname
+
+            sh.appearance = Texture2D('texture_'+str(i),ImageTexture(fname), Texture2DTransformation('',scale=(-1,5/7.),rotationAngle = pi/2))
             self.petal2panel[sh.id] = pid
             i += 1
     

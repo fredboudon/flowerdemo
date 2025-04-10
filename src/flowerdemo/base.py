@@ -590,6 +590,25 @@ class LpyModelView (SceneView):
 
 import sys
 
+CACHEDIR = None
+
+def get_cache_dir():
+    global CACHEDIR
+    if CACHEDIR is None:        
+        from os.path import exists,join
+        from os import mkdir, rmdir
+        from shutil import rmtree
+        tmpdir = str(QDir.tempPath())
+        CACHEDIR = join(tmpdir,'flowerdemo-cache')
+        print('Cache : ', CACHEDIR)
+        if '--re-cache' in sys.argv and exists(CACHEDIR):
+            print('Remove cache dir :',repr(CACHEDIR))
+            try:
+                rmtree(CACHEDIR)
+            except Exception as e: 
+                print(e)
+                pass    
+    return CACHEDIR
 
 class LpyModelWithCacheView (LpyModelView):
     def __init__(self,parent = None,name = ''):
@@ -620,18 +639,9 @@ class LpyModelWithCacheView (LpyModelView):
             from os.path import exists,join
             from os import mkdir, rmdir
             from shutil import rmtree
-            tmpdir = str(QDir.tempPath())
-            cachedir = join(tmpdir,'flowerdemo-cache')
-            print('Cache : ', cachedir)
-            if '--re-cache' in sys.argv and exists(cachedir):
-                print('Remove cache dir :',repr(cachedir))
-                try:
-                    rmtree(cachedir)
-                except Exception as e: 
-                    print(e)
-                    pass
-            lcachedir = join(cachedir,rep)
+            lcachedir = join(get_cache_dir(),rep)
             gfname = join(lcachedir,fname)
+            print('Cache dir',gname)
             outdated = False
             timestampfile = join(lcachedir,'timestamp.txt')
             self.cache = {}
