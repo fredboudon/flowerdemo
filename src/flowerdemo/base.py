@@ -510,6 +510,7 @@ class SceneView(View):
     
     def draw(self):        
         self.light = GL_LIGHT0
+        glEnable(GL_DEPTH_TEST)
         if self.lighting:
             glEnable(GL_LIGHTING)
             glEnable(self.light)
