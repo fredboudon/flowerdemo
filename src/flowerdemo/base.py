@@ -640,21 +640,30 @@ class LpyModelWithCacheView (LpyModelView):
             for i,maxp in self.__computeCache():
                 yield i,maxp
         else:
+            print("Start computing")
+            import os.path as op
             from os.path import exists,join
             from os import mkdir, rmdir
             from shutil import rmtree
-            lcachedir = join(get_cache_dir(),rep)
-            gfname = join(lcachedir,fname)
-            print('Cache dir',gname)
+            cachedir = get_cache_dir()
+            print('retrieve cache',cachedir, rep, fname)
+            print('Cache dir',cachedir)
+            lcachedir = op.join(cachedir, rep)
+            print('Cache dir',lcachedir)
             outdated = False
             timestampfile = join(lcachedir,'timestamp.txt')
+            print('timestampfile',timestampfile)
+            print(str(fname))
+            cachefname =  lcachedir + '/' + str(fname)
+            cachefname =  join(lcachedir ,str(fname))
+            print('Cache dir',cachefname)
             self.cache = {}
             if  exists(timestampfile) and int(eval(file(timestampfile).readline())) < int(os.stat(self.lsystem_file).st_mtime):
                 print('Outdated cache for lsystem',self.lsystem_file)
                 outdated = True
-            if not outdated and exists(gfname):
+            if not outdated and exists(cachefname):
                 print('looking for cache files')
-                cache = eval(open(gfname,'r').readline())
+                cache = eval(open(cachefname,'r').readline())
                 maxp = len(cache)
                 i = 0
                 for key,value in cache.items():
@@ -670,6 +679,7 @@ class LpyModelWithCacheView (LpyModelView):
             if len(self.cache) == 0:
                 print('compute cache')
                 for i,maxp in self.__computeCache():
+                    print(i,maxp)
                     yield i,maxp
                 if not exists(cachedir):
                     mkdir(cachedir)
@@ -681,11 +691,11 @@ class LpyModelWithCacheView (LpyModelView):
                     value.save(join(lcachedir,lfname))
                     cache[key] = lfname
                     print(key,lfname)
-                print(gfname)
-                with open(gfname,'w') as stream:
+                print(cachefname)
+                with open(cachefname,'w') as stream:
                     stream.write(repr(cache)+'\n')
                 print(timestampfile)
-                with timestampfile(gfname,'w') as stream:
+                with timestampfile(cachefname,'w') as stream:
                     stream.write(str(int(os.stat(self.lsystem_file).st_mtime))+'\n')
                 print('save cache',repr(fname))
                 yield 1,1
@@ -694,6 +704,7 @@ class LpyModelWithCacheView (LpyModelView):
         from copy import deepcopy 
         previousconf = deepcopy(self.variables)        
         config = []
+        print('compute cache')
         for var in self.__cachedcariables:
             newconfig = []
             if config:
