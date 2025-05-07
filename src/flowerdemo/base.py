@@ -607,7 +607,9 @@ def get_cache_dir():
                 rmtree(CACHEDIR)
             except Exception as e: 
                 print(e)
-                pass    
+                pass
+        if not exists(CACHEDIR):
+            mkdir(CACHEDIR)
     return CACHEDIR
 
 class LpyModelWithCacheView (LpyModelView):
